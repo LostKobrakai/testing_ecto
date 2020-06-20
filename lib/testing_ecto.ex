@@ -13,3 +13,21 @@ defmodule TestingEcto do
     TestingEcto.Accounts.create_user(repo, params)
   end
 end
+
+defimpl Ecto.Queryable, for: TestingEcto.Accounts.UserQuery do
+  import Ecto.Query
+  alias TestingEcto.Accounts.User
+
+  def to_query(%{filters: filters}) do
+    base = from User, as: :user
+
+    Enum.reduce(filters, base, fn
+      {:name, name}, query ->
+        # DO SANITE NAME for prod
+        from [user: user] in query, where: like(user.name, ^"%#{name}%")
+
+      _, query ->
+        query
+    end)
+  end
+end
