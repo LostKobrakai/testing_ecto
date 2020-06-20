@@ -13,7 +13,7 @@ defimpl Ecto.Queryable, for: TestingEcto.Accounts.UserQuery do
 
     Enum.reduce(filters, base, fn
       {:name, name}, query ->
-        # DO SANITE NAME for prod
+        # DO SANITIZE NAME for prod
         from [user: user] in query, where: like(user.name, ^"%#{name}%")
 
       _, query ->
