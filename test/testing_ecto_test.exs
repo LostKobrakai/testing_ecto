@@ -44,5 +44,19 @@ defmodule TestingEctoTest do
         filters: [name: "Max"]
       }
     end
+
+    test "computed field is filled" do
+      # Arrange
+      TestingEcto.RepoMock
+      |> expect(:all, fn _queryable, _opts ->
+        [%TestingEcto.Accounts.User{name: "Max Master"}]
+      end)
+
+      # Act
+      [max] = TestingEcto.list_users([], repo: TestingEcto.RepoMock)
+
+      # Assert
+      assert "MM" = max.avatar_letters
+    end
   end
 end
